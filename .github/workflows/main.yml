@@ -1,5 +1,7 @@
 name: Java Build Pipeline
 on: [push, workflow_dispatch]
+
+# Global override for all actions in this workflow
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -21,8 +23,8 @@ jobs:
           mkdir -p dist
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter
-
       - name: Upload Artifacts
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: 'dist'
+          name: site-content
+          path: dist
