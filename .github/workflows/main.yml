@@ -14,10 +14,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build Site
+        env:
+          # We explicitly map the secrets to these names
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           mkdir -p dist
+          # We pass them as arguments to ensure Java sees them
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
-          java -cp src/main/java TrafficRouter
+          java -cp src/main/java TrafficRouter "$SUPABASE_URL" "$SUPABASE_KEY"
+
       - name: Deploy to Cloudflare
         uses: cloudflare/pages-action@v1
         with:
