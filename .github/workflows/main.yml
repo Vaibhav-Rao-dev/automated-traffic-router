@@ -14,9 +14,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build Site
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           mkdir -p dist
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
