@@ -18,8 +18,10 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
+          mkdir -p dist
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter
+
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
