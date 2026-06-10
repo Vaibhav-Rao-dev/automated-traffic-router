@@ -1,7 +1,5 @@
 name: Java Build Pipeline
 on: [push, workflow_dispatch]
-
-# This ensures the entire factory uses the modern engine
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -15,10 +13,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Compile and Run
+      - name: Build Site
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
