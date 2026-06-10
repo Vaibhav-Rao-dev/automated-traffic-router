@@ -23,16 +23,29 @@ public class TrafficRouter {
     }
 
     private static void processData(String json) {
-        // Simple regex-based parsing to avoid heavy external dependencies for now
-        Pattern pattern = Pattern.compile("\\{\"city\":\"(.*?)\",\"service_type\":\"(.*?)\",\"tool_name\":\"(.*?)\",\"affiliate_link\":\"(.*?)\"\\}");
-        Matcher matcher = pattern.matcher(json);
+    // Force the directory creation
+    java.io.File distDir = new java.io.File("dist");
+    if (!distDir.exists()) {
+        boolean created = distDir.mkdirs();
+        System.out.println("Directory created: " + created);
+    }
+
+    // Regex-based parsing
+    java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\{\"city\":\"(.*?)\",\"service_type\":\"(.*?)\",\"tool_name\":\"(.*?)\",\"affiliate_link\":\"(.*?)\"\\}");
+    java.util.regex.Matcher matcher = pattern.matcher(json);
+    
+    while (matcher.find()) {
+        String city = matcher.group(1);
+        String service = matcher.group(2);
+        String html = "<html><body><h1>Best " + service + " in " + city + "</h1>" +
+                      "<p>Check out: <a href='" + matcher.group(4) + "'>" + matcher.group(3) + "</a></p></body></html>";
         
-        while (matcher.find()) {
-            String city = matcher.group(1);
-            String service = matcher.group(2);
-            String html = "<h1>Best " + service + " in " + city + "</h1>" +
-                          "<p>Check out: <a href='" + matcher.group(4) + "'>" + matcher.group(3) + "</a></p>";
-            System.out.println("Generated HTML for " + city + ":\n" + html);
+        try (java.io.FileWriter writer = new java.io.FileWriter("dist/" + city.replaceAll(" ", "_") + "_" + service.replaceAll(" ", "_") + ".html")) {
+            writer.write(html);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
     }
+}
+
 }
