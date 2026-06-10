@@ -4,9 +4,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # Updated to v4 for compatibility with future Node versions
+      - uses: actions/checkout@v4
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        # Updated to v4 for compatibility
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -14,6 +16,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          # Explicitly opting into Node 24 as recommended
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         run: |
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter
