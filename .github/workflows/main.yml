@@ -23,6 +23,13 @@ jobs:
           # We pass them as arguments to ensure Java sees them
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter "$SUPABASE_URL" "$SUPABASE_KEY"
+      - name: Run Financial Engine
+        env:
+          APP_KEY: ${{ secrets.BREEZE_APP_KEY }}
+          SECRET_KEY: ${{ secrets.BREEZE_SECRET_KEY }}
+        run: |
+          javac src/main/java/TradingEngine.java
+          java -cp src/main/java TradingEngine
 
       - name: Deploy to Cloudflare
         uses: cloudflare/pages-action@v1
