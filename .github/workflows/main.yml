@@ -1,7 +1,5 @@
 name: Java Build Pipeline
 on: [push, workflow_dispatch]
-
-# Global override for all actions in this workflow
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -23,8 +21,10 @@ jobs:
           mkdir -p dist
           javac src/main/java/TrafficEntry.java src/main/java/TrafficRouter.java
           java -cp src/main/java TrafficRouter
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Deploy to Cloudflare
+        uses: cloudflare/pages-action@v1
         with:
-          name: site-content
-          path: dist
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'traffic-router-live'
+          directory: 'dist'
